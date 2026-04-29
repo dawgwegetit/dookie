@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>For Kookie 💕</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    font-family: 'Comic Sans MS', 'Quicksand', system-ui, 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
+    background: linear-gradient(135deg, #ffd1e8 0%, #ffe0f0 50%, #ffc1d8 100%);
+    -webkit-tap-highlight-color: transparent;
+    overflow: hidden;
+  }
+  body {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+  }
+
+/* Wall of ily kookie text — sits ABOVE the button, below floating hearts */
+.ily-wall {
+position: fixed;
+inset: 0;
+z-index: 20;
+pointer-events: none;
+opacity: 0;
+transition: opacity 1s ease;
+overflow: hidden;
+line-height: 1.4;
+padding: 0.5rem;
+color: #ad1457;
+font-weight: bold;
+font-size: clamp(1rem, 2.5vw, 1.5rem);
+text-shadow:
+0 0 4px rgba(255,255,255,0.9),
+0 1px 2px rgba(255,255,255,0.8);
+word-spacing: 8px;
+}
+.ily-wall.visible { opacity: 1; }
+.ily-wall span {
+display: inline-block;
+margin: 2px 6px;
+white-space: nowrap;
+}
+.ily-wall span:nth-child(2n) { color: #e91e63; }
+.ily-wall span:nth-child(3n) { color: #c2185b; transform: rotate(-4deg); }
+.ily-wall span:nth-child(4n) { color: #ec407a; }
+.ily-wall span:nth-child(5n) { color: #d81b60; transform: rotate(3deg); }
+.ily-wall span:nth-child(7n) { color: #ad1457; transform: rotate(-2deg); }
+
+@keyframes wall-pulse {
+0%, 100% { transform: scale(1); }
+50% { transform: scale(1.01); }
+}
+.ily-wall.visible { animation: wall-pulse 3s ease-in-out infinite; }
+
+.title {
+position: fixed;
+top: 5%;
+left: 50%;
+transform: translateX(-50%);
+color: #000;
+font-size: clamp(1rem, 3.5vw, 1.6rem);
+text-align: center;
+z-index: 200;
+padding: 0.7rem 1.3rem;
+pointer-events: none;
+background: rgba(255, 255, 255, 0.95);
+border-radius: 20px;
+box-shadow: 0 4px 20px rgba(233, 30, 99, 0.25);
+border: 2px solid #fff;
+max-width: 90vw;
+}
+.counter {
+position: fixed;
+bottom: 5%;
+left: 50%;
+transform: translateX(-50%);
+color: #000;
+font-weight: bold;
+font-size: clamp(0.9rem, 3vw, 1.1rem);
+z-index: 200;
+background: rgba(255,255,255,0.95);
+padding: 0.6rem 1.3rem;
+border-radius: 999px;
+backdrop-filter: blur(8px);
+box-shadow: 0 4px 20px rgba(233, 30, 99, 0.25);
+border: 2px solid #fff;
+pointer-events: none;
+white-space: nowrap;
+}
+
+.stage {
+position: fixed;
+inset: 0;
+display: flex;
+align-items: center;
+justify-content: center;
+overflow: visible;
+z-index: 5;
+}
+
+.heart-btn {
+cursor: pointer;
+border: none;
+background: radial-gradient(circle at 30% 30%, #ff6fa3, #e91e63 60%, #c2185b);
+color: white;
+font-family: inherit;
+font-weight: bold;
+border-radius: 50%;
+width: 180px;
+height: 180px;
+box-shadow:
+0 10px 40px rgba(233, 30, 99, 0.5),
+inset 0 -8px 30px rgba(0,0,0,0.15),
+inset 0 8px 30px rgba(255,255,255,0.3);
+transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+height 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+user-select: none;
+display: flex;
+align-items: center;
+justify-content: center;
+text-align: center;
+padding: 0;
+flex-shrink: 0;
+animation: pulse 1.5s ease-in-out infinite;
+position: relative;
+z-index: 30;
+}
+.heart-btn span {
+font-size: clamp(0.9rem, 4vw, 1.4rem);
+line-height: 1.3;
+text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+padding: 1rem;
+}
+
+@keyframes pulse {
+0%, 100% { filter: brightness(1); }
+50% { filter: brightness(1.1); }
+}
+
+.floating {
+position: fixed;
+pointer-events: none;
+user-select: none;
+will-change: transform, opacity;
+z-index: 150;
+}
+@keyframes pop {
+0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+50% { opacity: 1; }
+100% { transform: translate(calc(-50% + var(–dx)), calc(-50% + var(–dy))) scale(var(–scale)); opacity: 0; }
+}
+
+.raindrop {
+position: fixed;
+pointer-events: none;
+user-select: none;
+top: -50px;
+will-change: transform;
+z-index: 150;
+}
+@keyframes rain-fall {
+0% { transform: translateY(-50px) rotate(var(–rot)); opacity: 0; }
+10% { opacity: 1; }
+90% { opacity: 1; }
+100% { transform: translateY(110vh) rotate(var(–rot)); opacity: 0; }
+}
+
+.message {
+position: fixed;
+pointer-events: none;
+color: #c2185b;
+font-weight: bold;
+font-size: clamp(1rem, 3vw, 1.4rem);
+text-shadow: 0 2px 8px rgba(255,255,255,0.9);
+white-space: nowrap;
+z-index: 50;
+}
+@keyframes float-up {
+0% { transform: translate(-50%, 0) scale(0.5); opacity: 0; }
+20% { opacity: 1; transform: translate(-50%, -20px) scale(1); }
+100% { transform: translate(-50%, -200px) scale(1.3); opacity: 0; }
+}
+
+.storm-flash {
+position: fixed;
+inset: 0;
+background: radial-gradient(circle, rgba(255,180,210,0.5), transparent 70%);
+pointer-events: none;
+opacity: 0;
+z-index: 1;
+animation: flash 0.6s ease-out;
+}
+@keyframes flash {
+0% { opacity: 0; }
+50% { opacity: 1; }
+100% { opacity: 0; }
+}
+</style>
+
+</head>
+<body>
+  <div class="ily-wall" id="ilyWall"></div>
+
+  <div class="title">Click to see how much your<br/>doogie loves you 💕</div>
+
+  <div class="stage">
+    <button class="heart-btn" id="heart">
+      <span>Click me<br/>Kookie 💖</span>
+    </button>
+  </div>
+
+  <div class="counter" id="counter">0 hearts of love</div>
+
+<script>
+  const btn = document.getElementById('heart');
+  const counter = document.getElementById('counter');
+  const ilyWall = document.getElementById('ilyWall');
+  const body = document.body;
+
+  let count = 0;
+  let size = 180;
+  let wallShown = false;
+  let rainStarted = false;
+  let rainIntensity = 1;
+
+  const emojis = ['💕','💖','💗','💓','💝','💘','🌸','✨','🥰','💞','🌷','🦋'];
+  const rainEmojis = ['💕','💖','💗','💓','💝','💘','❤️','💞','🌸','🌷'];
+  const messages = [
+    'I love you Kookie',
+    'forever yours 💕',
+    'my whole world',
+    'mine 💖',
+    'best girl ever',
+    'my Kookie 🥰',
+    'infinite love',
+    'you + me 💘',
+    'always & always',
+    'cutest doogie 🐾',
+    'my favorite person',
+    'endless love ✨'
+  ];
+
+  function rand(min, max) { return Math.random() * (max - min) + min; }
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  function fillIlyWall() {
+    const phrases = ['ily kookie 💕', 'ily kookie 💖', 'ily kookie 🥰', 'ily kookie ✨', 'ily kookie 💗'];
+    // Calculate roughly how many we need based on screen size
+    const screenArea = window.innerWidth * window.innerHeight;
+    const estimatedCount = Math.ceil(screenArea / 1500); // ~1500px² per phrase
+    let html = '';
+    for (let i = 0; i < estimatedCount; i++) {
+      html += `<span>${pick(phrases)}</span> `;
+    }
+    ilyWall.innerHTML = html;
+    requestAnimationFrame(() => {
+      ilyWall.classList.add('visible');
+    });
+  }
+
+  function spawnHearts(x, y, amount) {
+    for (let i = 0; i < amount; i++) {
+      const el = document.createElement('div');
+      el.className = 'floating';
+      el.textContent = pick(emojis);
+      el.style.fontSize = rand(40, 90) + 'px';
+      // Spawn from random screen positions instead of button center
+      // so they're visible even when the button covers the screen
+      const startX = rand(0, window.innerWidth);
+      const startY = rand(0, window.innerHeight);
+      el.style.left = startX + 'px';
+      el.style.top = startY + 'px';
+      const angle = rand(0, Math.PI * 2);
+      const dist = rand(150, 400);
+      el.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+      el.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
+      el.style.setProperty('--scale', rand(0.8, 2.5));
+      const dur = rand(2, 4);
+      el.style.animation = `pop ${dur}s ease-out forwards`;
+      body.appendChild(el);
+      setTimeout(() => el.remove(), dur * 1000);
+    }
+  }
+
+  function spawnMessage(x, y) {
+    const el = document.createElement('div');
+    el.className = 'message';
+    el.textContent = pick(messages);
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    el.style.animation = 'float-up 2.5s ease-out forwards';
+    body.appendChild(el);
+    setTimeout(() => el.remove(), 2500);
+  }
+
+  function spawnRaindrop() {
+    const el = document.createElement('div');
+    el.className = 'raindrop';
+    el.textContent = pick(rainEmojis);
+    el.style.fontSize = rand(30, 70) + 'px';
+    el.style.left = rand(-5, 100) + 'vw';
+    el.style.setProperty('--rot', rand(-30, 30) + 'deg');
+    const dur = rand(1.5, 3.5);
+    el.style.animation = `rain-fall ${dur}s linear forwards`;
+    body.appendChild(el);
+    setTimeout(() => el.remove(), dur * 1000);
+  }
+
+  function startRain() {
+    rainStarted = true;
+    const flash = document.createElement('div');
+    flash.className = 'storm-flash';
+    body.appendChild(flash);
+    setTimeout(() => flash.remove(), 600);
+
+    setInterval(() => {
+      const drops = Math.min(2 + Math.floor(rainIntensity), 15);
+      for (let i = 0; i < drops; i++) spawnRaindrop();
+    }, 80);
+  }
+
+  function updateCounter() {
+    let label = `${count.toLocaleString()} hearts of love`;
+    if (count >= 10) label = `${count.toLocaleString()} hearts 💕 ily kookie!`;
+    if (count >= 20) label = `${count.toLocaleString()} hearts 🌧️ raining love!`;
+    if (count >= 50) label = `${count.toLocaleString()} hearts 💖 storm of love!`;
+    if (count >= 100) label = `${count.toLocaleString()} hearts 🥰 infinite!`;
+    if (count >= 500) label = `${count.toLocaleString()} hearts ✨ unstoppable!`;
+    if (count >= 1000) label = `${count.toLocaleString()} hearts 🌌 cosmic love`;
+    counter.textContent = label;
+  }
+
+  function handleClick() {
+    count++;
+    updateCounter();
+
+    size += 60;
+    btn.style.width = size + 'px';
+    btn.style.height = size + 'px';
+
+    const rect = btn.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+
+    const amount = Math.min(20 + Math.floor(count / 2), 80);
+    spawnHearts(cx, cy, amount);
+
+    if (count % 3 === 0) {
+      spawnMessage(cx, Math.max(rect.top + 40, 80));
+    }
+
+    btn.style.filter = `hue-rotate(${(count * 3) % 360}deg)`;
+
+    if (count === 10 && !wallShown) {
+      wallShown = true;
+      fillIlyWall();
+    }
+
+    if (count === 20) startRain();
+    if (count >= 20) rainIntensity = 1 + (count - 20) * 0.4;
+  }
+
+  btn.addEventListener('click', handleClick);
+</script>
+
+</body>
+</html>
